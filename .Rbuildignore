@@ -1,0 +1,9 @@
+^\.Rproj\.user$
+^\.Rproj$
+^\.git$
+^\.gitignore$
+^plan\.md$
+^test_files\.tar$
+^gfa_test.*
+^Makefile$
+^compile_gfa$

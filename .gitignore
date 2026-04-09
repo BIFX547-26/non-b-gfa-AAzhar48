@@ -4,3 +4,16 @@
 *.tsv
 gfa
 notify.php*
+
+# R package files
+.Rproj.user/
+.Rproject
+.Rhistory
+*.Rproj
+src/*.o
+src/*.so
+src/*.dll
+.DS_Store
+.Rdata
+.Renviron
+man/*.Rd

@@ -1,0 +1,38 @@
+Package: nonBgfa
+Title: Detection of Non-B DNA-Forming Motifs in DNA Sequences
+Version: 0.1.0
+Authors@R: 
+    c(person("Duncan E.", "Donohue", role = c("aut", "cph"), 
+             comment = "Original GFA algorithm"),
+      person("Jack R.", "Collins", role = c("aut", "cph"),
+             comment = "Original GFA algorithm"),
+      person("Aqsa", "Azhar", role = c("cre", "aut"),
+             comment = "R package wrapper and refactoring"))
+Description: 
+    The nonBgfa package provides tools for detecting non-B DNA-forming 
+    motifs in genomic sequences. Non-B DNA structures include cruciform, 
+    triplex, slipped (hairpin) structures, tetraplex (G-quadruplex), 
+    left-handed Z-DNA, and others. These structures may play roles in 
+    DNA instability and mutagenesis, leading to DNA rearrangements and 
+    increased mutational rates, which are hallmarks of cancer.
+    
+    This package wraps the GFA (Genomic Feature Analyzer) C code, 
+    originally developed at NCI-Frederick/Frederick National Lab, 
+    providing an R interface for detecting sequences associated with 
+    non-B DNA forming motifs.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+URL: https://github.com/AAzhar48/non-b-gfa
+BugReports: https://github.com/AAzhar48/non-b-gfa/issues
+Imports:
+    utils
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    ggplot2,
+    dplyr
+VignetteBuilder: knitr
+SystemRequirements: C99

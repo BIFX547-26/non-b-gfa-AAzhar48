@@ -1,0 +1,11 @@
+# Makevars.win for nonBgfa R package on Windows
+
+SOURCES = gfa.c cdna.c rcdna.c read_fasta.c read_mult_fasta.c \
+          findAPR.c findDR.c findIR.c findMR.c findGQ.c findZDNA.c findSTR.c \
+          print_gff_file.c print_tsv_file.c print_usage.c \
+          process_repeats.c is_subset.c nulls.c
+
+OBJECTS = $(SOURCES:.c=.o)
+
+PKG_CFLAGS = -O2
+PKG_LIBS = -lm
