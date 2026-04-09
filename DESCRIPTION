@@ -1,6 +1,6 @@
 Package: nonBgfa
 Title: Detection of Non-B DNA-Forming Motifs in DNA Sequences
-Version: 0.1.0
+Version: 0.2.0
 Author: Aqsa Azhar [cre, aut],
     Duncan E. Donohue [aut, cph] (Original GFA algorithm),
     Jack R. Collins [aut, cph] (Original GFA algorithm)
