@@ -1,0 +1,5 @@
+gfa_analyze             Analyze DNA Sequence for Non-B DNA-Forming
+                        Motifs
+gfa_params              GFA Parameter Configuration
+gfa_test                Example DNA Test Sequence
+nonBgfa                 Non-B DNA Motif Detection

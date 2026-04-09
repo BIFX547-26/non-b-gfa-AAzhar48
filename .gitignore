@@ -17,3 +17,6 @@ src/*.dll
 .Rdata
 .Renviron
 man/*.Rd
+
+# pkgdown docs
+docs/

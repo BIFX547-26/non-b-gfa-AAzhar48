@@ -1,0 +1,104 @@
+* installing *source* package ‘nonBgfa’ ...
+** this is package ‘nonBgfa’ version ‘0.1.0’
+** using staged installation
+** libs
+using C compiler: ‘Apple clang version 14.0.0 (clang-1400.0.29.202)’
+using SDK: ‘MacOSX13.1.sdk’
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c gfa.c -o gfa.o
+gfa.c:120:6: warning: variable 'rcngisles' set but not used [-Wunused-but-set-variable]
+        int rcngisles = 0; //n reverse complement strand g islands
+            ^
+gfa.c:119:6: warning: variable 'ngisles' set but not used [-Wunused-but-set-variable]
+        int ngisles = 0; //n g islands
+            ^
+gfa.c:121:6: warning: variable 'nPgreps' set but not used [-Wunused-but-set-variable]
+        int nPgreps = 0; //n potential G repeats
+            ^
+gfa.c:122:6: warning: variable 'rcnPgreps' set but not used [-Wunused-but-set-variable]
+        int rcnPgreps = 0; //n reverse complement strand potential G repeats
+            ^
+4 warnings generated.
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c cdna.c -o cdna.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c rcdna.c -o rcdna.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c read_fasta.c -o read_fasta.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c read_mult_fasta.c -o read_mult_fasta.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c findAPR.c -o findAPR.o
+findAPR.c:49:15: warning: variable 't' set but not used [-Wunused-but-set-variable]
+        register int t; //a tract counter
+                     ^
+findAPR.c:188:6: warning: variable 'nBends' set but not used [-Wunused-but-set-variable]
+        int nBends;
+            ^
+2 warnings generated.
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c findDR.c -o findDR.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c findIR.c -o findIR.o
+findIR.c:56:14: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+                                if ((ndx == 0)) {//first one, can't compare current to prev if prev doesn't exist
+                                     ~~~~^~~~
+findIR.c:56:14: note: remove extraneous parentheses around the comparison to silence this warning
+                                if ((ndx == 0)) {//first one, can't compare current to prev if prev doesn't exist
+                                    ~    ^   ~
+findIR.c:56:14: note: use '=' to turn this equality comparison into an assignment
+                                if ((ndx == 0)) {//first one, can't compare current to prev if prev doesn't exist
+                                         ^~
+                                         =
+findIR.c:154:42: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+                                                                if ((irep[ndx - (1 + cBack)].len == irep[ndx
+                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+findIR.c:154:42: note: remove extraneous parentheses around the comparison to silence this warning
+                                                                if ((irep[ndx - (1 + cBack)].len == irep[ndx
+                                                                    ~                            ^
+findIR.c:154:42: note: use '=' to turn this equality comparison into an assignment
+                                                                if ((irep[ndx - (1 + cBack)].len == irep[ndx
+                                                                                                 ^~
+                                                                                                 =
+2 warnings generated.
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c findMR.c -o findMR.o
+findMR.c:53:14: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+                                if ((ndx == 0)) {//first one, can't compare current to prev if prev doesn't exist
+                                     ~~~~^~~~
+findMR.c:53:14: note: remove extraneous parentheses around the comparison to silence this warning
+                                if ((ndx == 0)) {//first one, can't compare current to prev if prev doesn't exist
+                                    ~    ^   ~
+findMR.c:53:14: note: use '=' to turn this equality comparison into an assignment
+                                if ((ndx == 0)) {//first one, can't compare current to prev if prev doesn't exist
+                                         ^~
+                                         =
+findMR.c:154:42: warning: equality comparison with extraneous parentheses [-Wparentheses-equality]
+                                                                if ((mrep[ndx - (1 + cBack)].len == mrep[ndx
+                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+findMR.c:154:42: note: remove extraneous parentheses around the comparison to silence this warning
+                                                                if ((mrep[ndx - (1 + cBack)].len == mrep[ndx
+                                                                    ~                            ^
+findMR.c:154:42: note: use '=' to turn this equality comparison into an assignment
+                                                                if ((mrep[ndx - (1 + cBack)].len == mrep[ndx
+                                                                                                 ^~
+                                                                                                 =
+2 warnings generated.
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c findGQ.c -o findGQ.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c findZDNA.c -o findZDNA.o
+findZDNA.c:49:18: warning: variable 'j' set but not used [-Wunused-but-set-variable]
+        register int i, j;
+                        ^
+1 warning generated.
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c findSTR.c -o findSTR.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c print_gff_file.c -o print_gff_file.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c print_tsv_file.c -o print_tsv_file.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c print_usage.c -o print_usage.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c process_repeats.c -o process_repeats.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c is_subset.c -o is_subset.o
+clang -arch x86_64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I/opt/R/x86_64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c nulls.c -o nulls.o
+clang -arch x86_64 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -L/Library/Frameworks/R.framework/Resources/lib -L/opt/R/x86_64/lib -o nonBgfa.so gfa.o cdna.o rcdna.o read_fasta.o read_mult_fasta.o findAPR.o findDR.o findIR.o findMR.o findGQ.o findZDNA.o findSTR.o print_gff_file.o print_tsv_file.o print_usage.o process_repeats.o is_subset.o nulls.o -lm -F/Library/Frameworks/R.framework/.. -framework R
+ld: warning: -undefined dynamic_lookup may not work with chained fixups
+installing to /Users/aqsa/Desktop/AI & Web-Based Bioinfo/non-b-gfa-AAzhar48/..Rcheck/00LOCK-non-b-gfa-AAzhar48/00new/nonBgfa/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+*** installing help indices
+** building package indices
+** installing vignettes
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (nonBgfa)

@@ -1,0 +1,192 @@
+pkgname <- "nonBgfa"
+source(file.path(R.home("share"), "R", "examples-header.R"))
+options(warn = 1)
+library('nonBgfa')
+
+base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+cleanEx()
+nameEx("gfa_analyze")
+### * gfa_analyze
+
+flush(stderr()); flush(stdout())
+
+### Name: gfa_analyze
+### Title: Analyze DNA Sequence for Non-B DNA-Forming Motifs
+### Aliases: gfa_analyze
+
+### ** Examples
+
+## Not run: 
+##D # Basic example: analyze a simple DNA sequence
+##D seq <- "AAAAAAAATATATATATGGGGGGGCCCCCCCGGGGGG"
+##D result <- gfa_analyze(sequence = seq, output_prefix = "./gfa_test")
+##D head(result\$gq_gff)  # View G-Quadruplex results
+##D 
+##D # Example 2: Use FASTA file with custom parameters
+##D params <- gfa_params(minGQrep = 4, maxGQspacer = 5)
+##D result <- gfa_analyze(
+##D   fasta_file = "my_sequence.fasta",
+##D   output_prefix = "./output/my_analysis",
+##D   parameters = params
+##D )
+##D 
+##D # Example 3: Only analyze specific motif types
+##D # Skip all except G-Quadruplexes and Z-DNA
+##D result <- gfa_analyze(
+##D   fasta_file = "my_sequence.fasta",
+##D   output_prefix = "./output/gq_z_only",
+##D   skip_apr = TRUE,
+##D   skip_dr = TRUE,
+##D   skip_ir = TRUE,
+##D   skip_str = TRUE,
+##D   skip_mr = TRUE
+##D )
+##D 
+##D # Example 4: Access and filter results
+##D result <- gfa_analyze(fasta_file = "sequence.fasta", output_prefix = "test")
+##D 
+##D # Get high-confidence G-Quadruplexes
+##D gq_results <- result\$gq_gff
+##D gq_confident <- gq_results[gq_results\$score > 0.5, ]
+##D 
+##D # Combine all detected motifs
+##D all_motifs <- rbind(
+##D   result\$apr_gff, result\$dr_gff, result\$ir_gff, result\$gq_gff,
+##D   result\$mr_gff, result\$str_gff, result\$z_gff
+##D )
+##D all_motifs <- all_motifs[order(all_motifs\$start), ]
+##D 
+##D # Example 5: Analyze with relaxed parameters
+##D params_loose <- gfa_params(minGQrep = 2, minIRrep = 4, minDRrep = 6)
+##D result <- gfa_analyze(
+##D   fasta_file = "sequence.fasta",
+##D   output_prefix = "./relaxed",
+##D   parameters = params_loose
+##D )
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("gfa_params")
+### * gfa_params
+
+flush(stderr()); flush(stdout())
+
+### Name: gfa_params
+### Title: GFA Parameter Configuration
+### Aliases: gfa_params
+
+### ** Examples
+
+# Default parameters - match original GFA defaults
+params_default <- gfa_params()
+print(params_default)
+
+# Custom parameters - stricter G-quadruplex detection
+params_strict_gq <- gfa_params(
+  minGQrep = 4,      # More G's required
+  maxGQspacer = 5    # Tighter G-run spacing
+)
+
+# Parameters for longer motifs (skip short repeats)
+params_long <- gfa_params(
+  minIRrep = 10,     # Longer inverted repeats
+  minDRrep = 20,     # Longer direct repeats
+  minSTRbp = 15      # Longer tandem repeats
+)
+
+# Parameters for fast analysis (fewer types)
+params_quick <- gfa_params(
+  minGQrep = 3,
+  minIRrep = 8,
+  minDRrep = 15
+)
+
+# View a specific parameter value
+params_strict_gq$minGQrep
+
+
+
+cleanEx()
+nameEx("gfa_test")
+### * gfa_test
+
+flush(stderr()); flush(stdout())
+
+### Name: gfa_test
+### Title: Example DNA Test Sequence
+### Aliases: gfa_test
+### Keywords: datasets
+
+### ** Examples
+
+## Not run: 
+##D # Access the test sequence FASTA file
+##D test_fasta <- system.file("extdata", "gfa_test.fasta", 
+##D                           package = "nonBgfa")
+##D 
+##D # Analyze the test sequence with default parameters
+##D results <- gfa_analyze(fasta_file = test_fasta)
+##D 
+##D # Verify expected motif counts
+##D nrow(results$apr_gff)  # Should be 1
+##D nrow(results$dr_gff)   # Should be 4
+##D nrow(results$ir_gff)   # Should be 14
+##D nrow(results$gq_gff)   # Should be 7
+##D nrow(results$mr_gff)   # Should be 5
+##D nrow(results$str_gff)  # Should be 7
+##D nrow(results$z_gff)    # Should be 4
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("nonBgfa-package")
+### * nonBgfa-package
+
+flush(stderr()); flush(stdout())
+
+### Name: nonBgfa-package
+### Title: Non-B DNA Motif Detection
+### Aliases: nonBgfa
+### Keywords: package
+
+### ** Examples
+
+## Not run: 
+##D # Basic usage
+##D library(nonBgfa)
+##D 
+##D # Analyze a DNA sequence
+##D dna <- "ACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT"
+##D results <- gfa_analyze(dna, output_prefix = "test")
+##D 
+##D # Or analyze a FASTA file
+##D results <- gfa_analyze("sequence.fasta", output_prefix = "analysis")
+##D 
+##D # Use custom parameters
+##D params <- gfa_params(minGQrep = 4, minIRrep = 8)
+##D results <- gfa_analyze("sequence.fasta", parameters = params)
+##D 
+##D # Get help on specific topics
+##D help(gfa_analyze)      # Main analysis function
+##D help(gfa_params)       # Parameter configuration
+##D vignette("getting-started")  # Getting started guide
+## End(Not run)
+
+
+
+### * <FOOTER>
+###
+cleanEx()
+options(digits = 7L)
+base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+grDevices::dev.off()
+###
+### Local variables: ***
+### mode: outline-minor ***
+### outline-regexp: "\\(> \\)?### [*]+" ***
+### End: ***
+quit('no')

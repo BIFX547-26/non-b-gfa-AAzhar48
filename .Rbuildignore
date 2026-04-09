@@ -7,3 +7,6 @@
 ^gfa_test.*
 ^Makefile$
 ^compile_gfa$
+^gfa$
+^\..*Rcheck$
+^..Rcheck$

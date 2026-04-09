@@ -1,14 +1,12 @@
 ---
 title: "Getting Started with nonBgfa"
-description: "A comprehensive guide to detecting non-B DNA motifs"
 author: "Copilot"
 date: "`r Sys.Date()`"
-format:
-  html:
-    toc: true
-    toc-depth: 3
-    code-fold: false
-    highlight-style: github
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with nonBgfa}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +14,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width = 7,
-  fig.height = 5
+  fig.height = 5,
+  eval = FALSE
 )
 ```
 
@@ -35,7 +34,7 @@ The **nonBgfa** package provides an easy-to-use R interface to detect and charac
 
 ### From GitHub
 
-```r
+```{r install, eval=FALSE}
 # Install from GitHub (requires devtools)
 if (!require("devtools")) {
   install.packages("devtools")
@@ -51,7 +50,7 @@ devtools::install_github("example/nonBgfa")
 
 ## Loading the Package
 
-```{r load, eval=FALSE}
+```{r load}
 library(nonBgfa)
 ```
 
@@ -61,18 +60,11 @@ library(nonBgfa)
 
 The simplest way to analyze a DNA sequence is to pass it directly to `gfa_analyze()`:
 
-```r
-# Load the package
-library(nonBgfa)
-
+```{r basic}
 # Analyze a simple DNA sequence
 dna <- "ACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT"
-results <- gfa_analyze(dna)
-```
+results <- gfa_analyze(dna, output_prefix = "test")
 
-The function returns a list containing data frames for each motif type detected:
-
-```r
 # View summary
 print(results)
 
@@ -84,7 +76,7 @@ names(results)
 
 For larger sequences or batch analysis, use FASTA files:
 
-```r
+```{r fasta}
 # Create a sample FASTA file
 fasta_content <- ">sequence_1
 ACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGTACGT
@@ -93,7 +85,7 @@ AAAAAACCCCCGGGGGTTTTTTACGTACGTACGTACGTACGTACGTACGT"
 writeLines(fasta_content, "example.fasta")
 
 # Analyze the FASTA file
-results <- gfa_analyze("example.fasta")
+results <- gfa_analyze("example.fasta", output_prefix = "analysis")
 ```
 
 ## Understanding the Results
@@ -102,7 +94,7 @@ results <- gfa_analyze("example.fasta")
 
 Each result from `gfa_analyze()` is a list containing data frames for GFF and TSV formats for each motif type:
 
-```r
+```{r results}
 results <- gfa_analyze("sequence.fasta")
 
 # Available components
@@ -111,7 +103,7 @@ str(results, max.level = 1)
 
 ### Accessing Specific Motif Results
 
-```r
+```{r access}
 # Access G-Quadruplex results in GFF format
 gq_gff <- results$gq_gff
 head(gq_gff)
@@ -156,7 +148,7 @@ Extends GFF format with additional annotations:
 
 The default parameters work well for most analyses, but you can customize them using `gfa_params()`:
 
-```r
+```{r params}
 # Create custom parameters
 params <- gfa_params(
   # G-Quadruplex settings
@@ -203,7 +195,7 @@ See `?gfa_params` for all 25 parameters.
 
 Use skip flags to disable detection of specific motif types:
 
-```r
+```{r skip}
 # Only search for G-Quadruplexes and Z-DNA
 results <- gfa_analyze(
   "sequence.fasta",
@@ -223,7 +215,7 @@ This can improve performance when you're only interested in specific motif types
 
 ### Filtering Results
 
-```r
+```{r filter}
 # Get G-Quadruplexes with score > 0.5
 gq_results <- results$gq_gff
 gq_filtered <- gq_results[gq_results$score > 0.5, ]
@@ -235,7 +227,7 @@ ir_long <- ir_results[ir_results$end - ir_results$start > 100, ]
 
 ### Combining Results Across Motif Types
 
-```r
+```{r combine}
 # Get all detected motifs in one data frame
 all_motifs <- do.call(rbind, 
   list(
@@ -256,7 +248,7 @@ head(all_motifs)
 
 ### Exporting Results
 
-```r
+```{r export}
 # Export to CSV
 write.csv(results$gq_gff, "gquadruplexes.csv", row.names = FALSE)
 write.csv(results$ir_tsv, "inverted_repeats.csv", row.names = FALSE)
@@ -266,140 +258,25 @@ write.table(results$gq_gff, "gquadruplexes.gff",
             sep = "\t", quote = FALSE, row.names = FALSE)
 ```
 
-## Advanced Examples
+## Background: Non-B DNA Structures
 
-### Example 1: Batch Analysis of Multiple Sequences
+### Why Non-B DNA Matters
 
-```r
-# Create multiple FASTA files
-fasta_files <- c("seq1.fasta", "seq2.fasta", "seq3.fasta")
+Standard B-form DNA (Watson-Crick double helix) is the predominant DNA conformation. However, under specific conditions, DNA can adopt alternative secondary structures:
 
-# Analyze all files
-results_list <- lapply(fasta_files, gfa_analyze)
+- **G-Quadruplexes (GQ)**: Four-stranded structures formed by G-rich sequences; common near telomeres and oncogene promoters
+- **Inverted Repeats (IR) → Cruciforms**: Hairpin structures that can cause chromosomal rearrangements
+- **Direct Repeats (DR) → Slipped-Strand**: Cause expansion/contraction via strand slippage
+- **Mirror Repeats (MR) → Triplex**: Three-stranded DNA structures with unique stability
+- **A-Phased Repeats (APR)**: Periodic A-tracts associated with DNA bending and nucleosome positioning
+- **Short Tandem Repeats (STR)**: Microsatellites; highly variable in length and often used in forensics
+- **Z-DNA**: Left-handed helical form; rare but found in regulatory regions
 
-# Combine G-Quadruplex results
-all_gq <- do.call(rbind, 
-  lapply(results_list, function(x) x$gq_gff)
-)
-
-# Count motifs per sequence
-table(all_gq$seqname)
-```
-
-### Example 2: Compare Parameter Sets
-
-```r
-# Default parameters
-results_default <- gfa_analyze("sequence.fasta")
-
-# Stricter parameters
-params_strict <- gfa_params(
-  minGQrep = 5,
-  minIRrep = 10,
-  minDRrep = 15
-)
-results_strict <- gfa_analyze("sequence.fasta", params = params_strict)
-
-# Compare results
-cat("Default - GQ found:", nrow(results_default$gq_gff), "\n")
-cat("Strict - GQ found:", nrow(results_strict$gq_gff), "\n")
-```
-
-### Example 3: Focus on Specific Regions
-
-```r
-# If sequence is >100 kbp, analyze regions
-large_seq <- "ACGT..." # Very long sequence
-
-# Analyze subsequences
-results_region1 <- gfa_analyze(substring(large_seq, 1, 50000))
-results_region2 <- gfa_analyze(substring(large_seq, 50001, 100000))
-```
-
-## Troubleshooting
-
-### Sequence Validation Errors
-
-```r
-# Error: Invalid nucleotides
-# Solution: Ensure sequence contains only ACGT (and optionally NRYSWKMBDHV)
-dna <- "ACGTACGTN"  # OK - N is ambiguous
-dna <- "ACGTACGTX"  # ERROR - X is not valid
-
-# Check your sequence
-is_valid <- grepl("^[ACGTNRYSWKMBDHV]+$", your_sequence, ignore.case = TRUE)
-```
-
-### FASTA File Issues
-
-```r
-# Error: File not found
-# Solution: Check file path
-file.exists("path/to/sequence.fasta")
-
-# Error: Invalid FASTA format
-# Solution: Check FASTA formatting
-# - First line must start with '>'
-# - Sequences follow
-# - Can be multiline
-```
-
-### Empty Results
-
-```r
-# If no motifs detected, this is normal for some parameters
-if (nrow(results$gq_gff) == 0) {
-  cat("No G-Quadruplexes detected\n")
-}
-
-# Try relaxing parameters
-params_loose <- gfa_params(minGQrep = 2, maxGQspacer = 10)
-results_loose <- gfa_analyze("sequence.fasta", params = params_loose)
-```
-
-## Background Information
-
-### What Are Non-B DNA Structures?
-
-DNA is a complex molecule with potential for multiple conformations:
-
-**B-DNA** (Watson-Crick): The standard double helix form (~95% of cellular DNA)
-
-**G-Quadruplexes (GQ)**: Four-stranded structures formed by G-rich sequences
-- Found near telomeres and gene promoters
-- Implicated in aging and cancer
-
-**Inverted Repeats (IR) → Cruciforms**: Palindromic sequences that form hairpin structures
-- Can cause chromosomal rearrangements
-- Associated with fragile sites
-
-**Direct Repeats (DR) → Slipped-Strand**: Repetitive sequences prone to strand slippage
-- Cause microsatellite expansion/contraction
-- Lead to Huntington's disease, fragile X syndrome
-
-**Mirror Repeats (MR) → Triplex**: Form three-stranded DNA structures
-- Unusual base pairing (Hoogsteen pairs)
-- Regulate gene expression
-
-**A-Phased Repeats (APR)**: Periodic A-tracts that bend DNA
-- Affect nucleosome positioning
-- Important for DNA bending and flexibility
-
-**Short Tandem Repeats (STR)**: Microsatellites with repeated sequences
-- Highly variable markers
-- Used in forensics and population genetics
-
-**Z-DNA**: Left-handed helix (vs. right-handed B-DNA)
-- Rare but important in regulation
-- Found at promoters and other regulatory regions
-
-### Why This Matters
-
-Non-B DNA structures are associated with:
-- **Cancer**: Genomic instability, mutations
-- **Neurological disorders**: Repeat expansions (Huntington's, Fragile X)
-- **Aging**: Telomere shortening, G-quadruplex formation
-- **Evolution**: Source of genetic variation
+These structures play roles in:
+- Gene regulation and transcription
+- DNA replication and recombination
+- Genomic instability and mutagenesis
+- Disease mechanisms (fragile sites, expansions)
 
 ## References
 

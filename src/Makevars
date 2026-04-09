@@ -9,8 +9,7 @@ SOURCES = gfa.c cdna.c rcdna.c read_fasta.c read_mult_fasta.c \
 
 OBJECTS = $(SOURCES:.c=.o)
 
-# Compiler flags
-PKG_CFLAGS = -O2
+# Compiler flags (using R's default optimization)
 PKG_LIBS = -lm
 
 # Build rule
