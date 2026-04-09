@@ -1,82 +1,214 @@
-# non-B-gfa
-gfa programs for Non-B site at NCI/FNLCR
+# nonBgfa: Non-B DNA Motif Detection in R
 
-gfa is a Suite of programs developed at NCI-Frederick/Frederick National Lab to find sequences associated with non-B DNA forming motifs
+<!-- badges -->
+[![R-CMD-check](https://github.com/example/nonBgfa/workflows/R-CMD-check/badge.svg)](https://github.com/example/nonBgfa)
+[![CRAN status](https://www.r-pkg.org/badges/version/nonBgfa)](https://CRAN.R-project.org/package=nonBgfa)
 
-DNA exists in many possible conformations that include the A-DNA, B-DNA, and Z-DNA forms; of these, B-DNA is the most common form found in cells. The DNAs that do not fall into a right-handed Watson-Crick double-helix are known as non-B DNAs and comprise cruciform, triplex, slipped (hairpin) structures, tetraplex (G-quadruplex), left-handed Z-DNA, and others. Several recent publications have provided significant evidence that non-B DNA structures may play a role in DNA instability and mutagenesis, leading to both DNA rearrangements and increased mutational rates, which are hallmark of cancer.
+## Overview
 
-**Website for submitting sequences: https://nonb-abcc.ncifcrf.gov/apps/site/default**
+**nonBgfa** is an R package that detects and analyzes non-B DNA-forming motifs in DNA sequences. Non-B DNA structures—including cruciforms (inverted repeats), triplexes (mirror repeats), slipped-strand structures (direct repeats), G-quadruplexes, A-phased repeats, short tandem repeats, and Z-DNA—have been implicated in DNA instability, mutagenesis, and genetic diseases including cancer.
 
-The results from the website are based on the default values of gfa and should match the example output (included in the tar file) when the example (below) is run as shown. 
+This package wraps the mature [GFA (Gene Feature Analysis) suite](https://nonb-abcc.ncifcrf.gov/apps/site/default) developed at NCI-Frederick/Frederick National Lab, providing an easy-to-use R interface for analyzing DNA sequences.
 
+## Features
 
-Please cite: Non-B DB v2.0: a database of predicted non-B DNA-forming motifs and its associated tools.
-Regina Z. Cer, Duncan E. Donohue, Uma S. Mudunuri, Nuri A. Temiz, Michael A. Loss, Nathan J. Starner, Goran N. Halusa, Natalia Volfovsky, Ming Yi, Brian T. Luke, Albino Bacolla, Jack R. Collins and Robert M. Stephens.
-Nucl. Acids Res. (2013) 41 (D1): D94-D100. doi: 10.1093/nar/gks955
+- **7 motif types**: A-Phased Repeats (APR), Direct Repeats (DR), Inverted Repeats (IR), G-Quadruplexes (GQ), Mirror Repeats (MR), Short Tandem Repeats (STR), Z-DNA
+- **Flexible input**: Analyze DNA sequences directly or load from FASTA files
+- **Customizable parameters**: 25 tunable parameters with sensible defaults
+- **Multiple output formats**: Results as R data frames (GFF and TSV formats)
+- **Comprehensive validation**: Input sequence validation and output format checking
+- **Skip options**: Selectively disable motif searches to save computation time
 
+## Installation
+
+Install from source (development version):
+
+```r
+# Install devtools if you don't have it
+if (!require("devtools")) install.packages("devtools")
+
+# Install nonBgfa from GitHub
+devtools::install_github("example/nonBgfa")
 ```
-************************  GFA2    ********************************************
 
-usage:./gfa -seq <input_fasta_filename> -out <output_file_prefix> [optional_switches]
-*****************************************************************************
- GFA2 takes in a DNA sequence in fasta format and returns Gene Feature Format
- (.gff) and Tab Separated Value (.tsv) files containing the location and details of potential non-B DNA forming motifs. 
- 
-Required Switches:
-	-seq <string>; The filename for the input DNA fasta file.
-	-out <string>; The output filename prefix.
-	Motif abbreviations and file extension are automatically appended.
- 
-Optional Integer Switches:  Each switch is followed by its default value.
-		All values refer to sequential nucleotides.
-		Note: if an integer switch is given, its associated value is required.
-	-minGQrep <3>; The minimum number of consecutive G's to form a G run (no max).
-	-maxGQspacer <7>; The maximum allowed distance between G runs (min of 1).
-	-minMRrep <10>; The minimum length of half of a mirror repeat (no max).
-	-maxMRspacer <100>; The c mirror repeat halves (min = 0).
-	-minIRrep <6>; The minimum length of half of an inverted repeat (no max).
-	-maxIRspacer <100>; The maximum allowed distance between inverted repeat halves (min = 0).
-	-shortIRcut <9>; The maximum length of half of an inverted repeat for it to be considered "short".
-	-shortIRspacer <4>; The maximum allowed distance between short inverted repeat halves (min = 0).
-	-minDRrep <10>; The minimum length of half of a direct repeat.
-	-maxDRrep <300>; The maximum length of half of a direct repeat.
-	-maxDRspacer <100>; The maximum allowed distance between direct repeat halves (min = 0).
-	-minATracts <3>; The minimum number of consecutive A Tracts to form an A-Phased Repeat.
-	-minATractSep <10>; The minimum separation between A Tracts centers.
-	-maxATractSep <11>; The maximum separation between A Tracts centers.
-	-maxAPRlen <9>; The maximum number of consecutive As allowed in an A tract.
-	-minAPRlen <3>; The minimum number of consecutive As allowed in an A tract.
-	-minZlen <10>; The minimum length of Z-DNA alternating purine/pyramadine run (no max).
-	-minSTR <1>; The minimum length of repeating element in short tandem repeats.
-	-maxSTR <9>; The maximum length of repeating element in short tandem repeats.
-	-minSTRbp <8>; The minimum overall length for qualification as a short tandem repeat.
-	-minCruciformRep <6>; The minimum repeat length for IR to qualify as cruciform.
-	-maxCruciformSpacer <4>; The maximum spacer length for IR to qualify as cruciform.
-	-minTriplexYRpercent <10>; The minimum purine/pyramadine percent contend for MR to qualify as triplex.
-	-maxTriplexSpacer <8>; The maximum spacer length for MR to qualify as triplex.
-	-maxSlippedSpacer <0>; The maximum spacer length for DR to qualify as slipped.
- 
-Other Optional Switches: (not followed by values)
-	-chrom <string>; An identifier for the input sequence, "chr1" for example.
-	   If not given, the first word of the fasta title string is used
-	-skipAPR; Do not search for A-Phased Repeats (bent DNA). 
-	-skipSTR; Do not search for Short Tandem Repeats. 
-	-skipDR; Do not search for Direct Repeats (slipped DNA). 
-	-skipMR; Do not search for Mirror Repeats (triplex DNA). 
-	-skipIR; Do not search for Inverted Repeats (cruciform DNA). 
-	-skipGQ; Do not search for G-Quadruplexe motifs. 
-	-skipZ; Do not search for Z DNA motifs. 
-	-skipSlipped; Do not search for slipped subset of DRs. 
-	-skipCruciform; Do not search for cruciform subset of IRs. 
-	-skipTriplex; Do not search for triplex subset of MRs. 
-	-skipWGET; Do not make wget call to php scripts to signify completion. 
-	-doCHMOD; Run a system call to chomd command (664) on output files. 
-********************************************************************
-         EXAMPLE:
-./gfa -skipWGET -seq gfa_test.fasta -out gfa_test
-	The input sequence file is gfa_test.fasta
-	There should be 14 output files (included in test_files.tar for comparison) using the default values
-********************************************************************
- Author: Duncan E. Donohue, Ph.D.
- Expansion of work by Jack R. Collins, Ph.D.
+System requirements: C99 compiler (gcc/clang)
+
+## Quick Start
+
+### Basic Analysis
+
+Analyze a DNA sequence directly:
+
+```r
+library(nonBgfa)
+
+# Simple sequence analysis
+dna_seq <- "ACGTACGTACGTACGTACGTACGTACGTACGTACGT"
+results <- gfa_analyze(dna_seq)
+
+# View results summary
+print(results)
 ```
+
+### Analyze FASTA File
+
+```r
+# Analyze a FASTA file
+results <- gfa_analyze("path/to/sequence.fasta")
+
+# Access results as data frames
+head(results$gq_gff)      # G-Quadruplex motifs (GFF format)
+head(results$gq_tsv)      # G-Quadruplex motifs (TSV format with annotations)
+head(results$ir_gff)      # Inverted Repeats (cruciforms)
+```
+
+### Customize Parameters
+
+```r
+# Create custom parameters
+params <- gfa_params(
+  minGQrep = 4,           # More stringent G-quadruplex detection
+  minIRrep = 8,           # Longer minimum inverted repeat
+  maxIRspacer = 50,       # Tighter spacer constraint
+  skipDR = TRUE           # Skip direct repeat detection
+)
+
+# Analyze with custom parameters
+results <- gfa_analyze("sequence.fasta", params = params)
+```
+
+### Skip Specific Motif Searches
+
+```r
+# Only analyze G-quadruplexes and Z-DNA
+results <- gfa_analyze(
+  "sequence.fasta",
+  skip_apr = TRUE,
+  skip_dr = TRUE,
+  skip_ir = TRUE,
+  skip_mr = TRUE,
+  skip_str = TRUE
+)
+```
+
+## Parameters Reference
+
+Key parameters (see `?gfa_params` for complete list):
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `minGQrep` | 3 | Minimum consecutive G's in a G-run |
+| `maxGQspacer` | 7 | Maximum distance between G-runs |
+| `minIRrep` | 6 | Minimum half-length of inverted repeat |
+| `maxIRspacer` | 100 | Maximum spacer between IR halves |
+| `minDRrep` | 10 | Minimum half-length of direct repeat |
+| `maxDRspacer` | 100 | Maximum spacer between DR halves |
+| `minMRrep` | 10 | Minimum half-length of mirror repeat |
+| `maxMRspacer` | 100 | Maximum spacer between MR halves |
+| `minSTR` | 1 | Minimum repeat unit length (STR) |
+| `maxSTR` | 9 | Maximum repeat unit length (STR) |
+| `minZlen` | 10 | Minimum Z-DNA motif length |
+| `minATracts` | 3 | Minimum A-tracts for APR |
+
+## Output Format
+
+Results are returned as a list of data frames:
+
+```r
+results <- gfa_analyze("sequence.fasta")
+
+# Access individual motif results
+results$apr_gff    # A-Phased Repeats (GFF format)
+results$apr_tsv    # A-Phased Repeats (TSV format)
+results$dr_gff     # Direct Repeats
+results$dr_tsv
+results$ir_gff     # Inverted Repeats (cruciforms)
+results$ir_tsv
+results$gq_gff     # G-Quadruplexes
+results$gq_tsv
+results$mr_gff     # Mirror Repeats (triplex)
+results$mr_tsv
+results$str_gff    # Short Tandem Repeats
+results$str_tsv
+results$z_gff      # Z-DNA
+results$z_tsv
+```
+
+### GFF Format Columns
+- `seqname`: Chromosome/sequence identifier
+- `source`: Data source (GFA)
+- `feature`: Motif type
+- `start`: Start position (1-based)
+- `end`: End position (inclusive)
+- `score`: Detection score/confidence
+- `strand`: DNA strand (+/-)
+- `frame`: Reading frame
+- `attributes`: Additional annotations (composition, runs, etc.)
+
+### TSV Format Columns
+Extended format with additional columns:
+- All GFF columns plus:
+- `islands`: Number of motif islands
+- `runs`: Number of runs within island
+- `max`: Maximum run length
+- `composition`: Nucleotide breakdown
+- `sequence`: Detected motif sequence
+
+## Background: Non-B DNA Structures
+
+### Why Non-B DNA Matters
+
+Standard B-form DNA (Watson-Crick double helix) is the predominant DNA conformation. However, under specific conditions, DNA can adopt alternative secondary structures:
+
+- **G-Quadruplexes (GQ)**: Four-stranded structures formed by G-rich sequences; common near telomeres and oncogene promoters
+- **Inverted Repeats (IR) → Cruciforms**: Hairpin structures that can cause chromosomal rearrangements
+- **Direct Repeats (DR) → Slipped-Strand**: Cause expansion/contraction via strand slippage
+- **Mirror Repeats (MR) → Triplex**: Three-stranded DNA structures with unique stability
+- **A-Phased Repeats (APR)**: Periodic A-tracts associated with DNA bending and nucleosome positioning
+- **Short Tandem Repeats (STR)**: Microsatellites; highly variable in length and often used in forensics
+- **Z-DNA**: Left-handed helical form; rare but found in regulatory regions
+
+These structures play roles in:
+- Gene regulation and transcription
+- DNA replication and recombination
+- Genomic instability and mutagenesis
+- Disease mechanisms (fragile sites, expansions)
+
+## Citation
+
+If you use **nonBgfa** in your research, please cite both the original GFA paper and this R package:
+
+**Original GFA Suite:**
+> Non-B DB v2.0: a database of predicted non-B DNA-forming motifs and its associated tools.
+> Cer RZ, Donohue DE, Mudunuri US, Temiz NA, Loss MA, Starner NJ, Halusa GN, Volfovsky N, Yi M, Luke BT, Bacolla A, Collins JR, Stephens RM.
+> *Nucleic Acids Research.* 2013 Jan 1;41(D1):D94-D100.
+> doi: [10.1093/nar/gks955](https://doi.org/10.1093/nar/gks955)
+
+**Original Website:** https://nonb-abcc.ncifcrf.gov/apps/site/default
+
+## Examples
+
+See the package vignette for detailed workflows:
+
+```r
+vignette("getting-started", package = "nonBgfa")
+```
+
+## License
+
+This R package is provided under the same license as the original GFA source code.
+
+## Authors
+
+**R Package:** Copilot (2025)  
+**Original GFA Tool:** Duncan E. Donohue, Ph.D. (expansion of work by Jack R. Collins, Ph.D.), NCI-Frederick
+
+## Development
+
+This package wraps the established GFA C implementation, providing:
+- Clean R interface to the underlying algorithms
+- Comprehensive testthat test suite comparing outputs to original CLI
+- Complete roxygen2 documentation
+- Vignettes demonstrating common workflows
+
+For issues, feature requests, or contributions, please see the package repository.
